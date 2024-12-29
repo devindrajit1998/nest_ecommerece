@@ -25,7 +25,6 @@ console.log("captchaCode", captchaCode);
     confirm_password: '',
     email: '',
     checkbox: ''
-    // captcha: ''
   }
   const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues,
@@ -112,7 +111,7 @@ console.log("captchaCode", captchaCode);
                           />
                           <span className="font-sm text-danger">{errors.confirm_password}</span>
                         </div>
-                        <div className="login_footer form-group">
+                        {/* <div className="login_footer form-group">
                           <div className="chek-form">
                             <input
                               type="text"
@@ -120,13 +119,13 @@ console.log("captchaCode", captchaCode);
                               placeholder="Security code *"
                             />
                           </div>
-                          {/* <span className="security-code">
+                          <span className="security-code">
                             <b className="text-new">{captchaCode[0]}</b>
                             <b className="text-hot">{captchaCode[1]}</b>
                             <b className="text-sale">{captchaCode[2]}</b>
                             <b className="text-best">{captchaCode[3]}</b>
-                          </span> */}
-                        </div>
+                          </span>
+                        </div> */}
                         <div className="login_footer form-group mb-0">
                           <div className="chek-form">
                             <div className="custome-checkbox">
@@ -154,11 +153,12 @@ console.log("captchaCode", captchaCode);
                         <div className="form-group mb-30 mt-50">
                           <ReCAPTCHA
                             sitekey="6LeSK6kqAAAAADwBFlzjUXBUN3wbr9UpnQ6q4om_"
-                            //  size="invisible"
+                             size="invisible"
                             onChange={handleCaptcha}
                           />
                           <button
-                            type={captchaCode ? "/submit" : "button"}
+                            // type={captchaCode ? "/submit" : "button"}
+                            type="submit"
                             className="btn btn-fill-out btn-block hover-up font-weight-bold mt-20"
                           >
                             Submit &amp; Register
