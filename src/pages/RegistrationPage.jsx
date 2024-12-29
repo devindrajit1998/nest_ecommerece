@@ -141,8 +141,8 @@ export default function RegistrationPage() {
                             onChange={handleCaptcha}
                           />
                           <button
-                            // type={captchaCode ? "/submit" : "button"}
-                            type="submit"
+                            type={captchaCode ? "/submit" : "button"}
+                            // type="submit"
                             className="btn btn-fill-out btn-block hover-up font-weight-bold mt-20"
                           >
                             Submit &amp; Register
