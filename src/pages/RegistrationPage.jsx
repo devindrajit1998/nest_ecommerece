@@ -6,7 +6,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 export default function RegistrationPage() {
   const [captchaCode, setCaptchaCode] = useState("");
-  console.log("captchaCode", captchaCode);
+  // console.log("captchaCode", captchaCode);
 
   const initialValues = {
     username: '',
@@ -133,15 +133,13 @@ export default function RegistrationPage() {
                         {touched.checkbox && errors.checkbox && (
                           <span className="font-sm text-danger">{errors.checkbox}</span>
                         )}
-
-
                         <div className="form-group mb-30 mt-50">
                           <ReCAPTCHA
                             sitekey="6LfDM6kqAAAAANn5pEP2SbUugd8zzlnMyALO86XY"
                             onChange={handleCaptcha}
                           />
                           <button
-                            type={captchaCode ? "/submit" : "button"}
+                            type={captchaCode ? "submit" : "button"}
                             // type="submit"
                             className="btn btn-fill-out btn-block hover-up font-weight-bold mt-20"
                           >
