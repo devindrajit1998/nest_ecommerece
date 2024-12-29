@@ -10,7 +10,7 @@ export default function LoginPage() {
     const newCode = randomCode.split('');
     setCaptchaCode(newCode);
   };
-  console.log("captchaCode", captchaCode);
+
 
   useEffect(() => {
     generateCaptcha();
