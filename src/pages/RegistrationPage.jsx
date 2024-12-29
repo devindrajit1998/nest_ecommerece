@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { signUpSchema } from "../schemas";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../redux/slice/UserSlice";
 
 export default function RegistrationPage() {
+  const dispatch = useDispatch();
   const [captchaCode, setCaptchaCode] = useState("");
   // console.log("captchaCode", captchaCode);
 
@@ -15,10 +18,13 @@ export default function RegistrationPage() {
     email: '',
     checkbox: ''
   }
-  const { values, errors,touched, handleBlur, handleChange, handleSubmit } = useFormik({
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues,
     validationSchema: signUpSchema,
     onSubmit: (values) => {
+      delete values.checkbox;
+      delete values.confirm_password;
+      dispatch(registerUser(values));
       console.log(values);
     }
   })
@@ -56,7 +62,7 @@ export default function RegistrationPage() {
                         </p>
                       </div>
                       <form onSubmit={handleSubmit}>
-                      <div className="form-group">
+                        <div className="form-group">
                           <input
                             type="text"
                             name="username"
@@ -108,7 +114,7 @@ export default function RegistrationPage() {
                             <span className="font-sm text-danger">{errors.confirm_password}</span>
                           )}
                         </div>
-                       
+
                         <div className="login_footer form-group mb-0">
                           <div className="chek-form">
                             <div className="custome-checkbox">
@@ -139,8 +145,8 @@ export default function RegistrationPage() {
                             onChange={handleCaptcha}
                           />
                           <button
-                            type={captchaCode ? "submit" : "button"}
-                            // type="submit"
+                            // type={captchaCode ? "submit" : "button"}
+                            type="submit"
                             className="btn btn-fill-out btn-block hover-up font-weight-bold mt-20"
                           >
                             Submit &amp; Register
