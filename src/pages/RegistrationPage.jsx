@@ -6,19 +6,8 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 export default function RegistrationPage() {
   const [captchaCode, setCaptchaCode] = useState("");
-console.log("captchaCode", captchaCode);
-  // Function to generate a 4-digit random code
-  // const generateCaptcha = async () => {
-  //   const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
-  //   const newCode = randomCode.split('');
-  //   setCaptchaCode(newCode);
-  // };
+  console.log("captchaCode", captchaCode);
 
-
-
-  // useEffect(() => {
-  //   generateCaptcha();
-  // }, []);
   const initialValues = {
     username: '',
     password: '',
@@ -26,7 +15,7 @@ console.log("captchaCode", captchaCode);
     email: '',
     checkbox: ''
   }
-  const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
+  const { values, errors,touched, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues,
     validationSchema: signUpSchema,
     onSubmit: (values) => {
@@ -67,7 +56,7 @@ console.log("captchaCode", captchaCode);
                         </p>
                       </div>
                       <form onSubmit={handleSubmit}>
-                        <div className="form-group">
+                      <div className="form-group">
                           <input
                             type="text"
                             name="username"
@@ -76,7 +65,9 @@ console.log("captchaCode", captchaCode);
                             onChange={handleChange}
                             onBlur={handleBlur}
                           />
-                          <span className="font-sm text-danger">{errors.username}</span>
+                          {touched.username && errors.username && (
+                            <span className="font-sm text-danger">{errors.username}</span>
+                          )}
                         </div>
                         <div className="form-group">
                           <input
@@ -87,7 +78,9 @@ console.log("captchaCode", captchaCode);
                             onChange={handleChange}
                             onBlur={handleBlur}
                           />
-                          <span className="font-sm text-danger">{errors.email}</span>
+                          {touched.email && errors.email && (
+                            <span className="font-sm text-danger">{errors.email}</span>
+                          )}
                         </div>
                         <div className="form-group">
                           <input
@@ -98,7 +91,9 @@ console.log("captchaCode", captchaCode);
                             onChange={handleChange}
                             onBlur={handleBlur}
                           />
-                          <span className="font-sm text-danger">{errors.password}</span>
+                          {touched.password && errors.password && (
+                            <span className="font-sm text-danger">{errors.password}</span>
+                          )}
                         </div>
                         <div className="form-group">
                           <input
@@ -109,23 +104,11 @@ console.log("captchaCode", captchaCode);
                             onChange={handleChange}
                             onBlur={handleBlur}
                           />
-                          <span className="font-sm text-danger">{errors.confirm_password}</span>
+                          {touched.confirm_password && errors.confirm_password && (
+                            <span className="font-sm text-danger">{errors.confirm_password}</span>
+                          )}
                         </div>
-                        {/* <div className="login_footer form-group">
-                          <div className="chek-form">
-                            <input
-                              type="text"
-                              name="captcha"
-                              placeholder="Security code *"
-                            />
-                          </div>
-                          <span className="security-code">
-                            <b className="text-new">{captchaCode[0]}</b>
-                            <b className="text-hot">{captchaCode[1]}</b>
-                            <b className="text-sale">{captchaCode[2]}</b>
-                            <b className="text-best">{captchaCode[3]}</b>
-                          </span>
-                        </div> */}
+                       
                         <div className="login_footer form-group mb-0">
                           <div className="chek-form">
                             <div className="custome-checkbox">
@@ -134,7 +117,6 @@ console.log("captchaCode", captchaCode);
                                 type="checkbox"
                                 name="checkbox"
                                 id="exampleCheckbox12"
-                                defaultValue
                                 value={values.checkbox}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
@@ -148,12 +130,14 @@ console.log("captchaCode", captchaCode);
                             </div>
                           </div>
                         </div>
-                        <span className="font-sm text-danger">{errors.checkbox}</span>
+                        {touched.checkbox && errors.checkbox && (
+                          <span className="font-sm text-danger">{errors.checkbox}</span>
+                        )}
+
 
                         <div className="form-group mb-30 mt-50">
                           <ReCAPTCHA
-                            sitekey="6LeSK6kqAAAAADwBFlzjUXBUN3wbr9UpnQ6q4om_"
-                             size="invisible"
+                            sitekey="6LfDM6kqAAAAANn5pEP2SbUugd8zzlnMyALO86XY"
                             onChange={handleCaptcha}
                           />
                           <button
