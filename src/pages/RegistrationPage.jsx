@@ -1,15 +1,34 @@
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signUpSchema } from "../schemas";
 import ReCAPTCHA from "react-google-recaptcha";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../redux/slice/UserSlice";
+import AWN from "awesome-notifications";
 
 export default function RegistrationPage() {
+  const notifier = new AWN();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [captchaCode, setCaptchaCode] = useState("");
   // console.log("captchaCode", captchaCode);
+
+  const onOk = () => { navigate('/login'); };
+
+  const onRegister = () => {
+    notifier.confirm(
+      'Please check your email address',
+      onOk,
+      false,
+      {
+        labels: {
+          confirm: 'Account Verification Needed'
+        }
+      }
+    )
+  }
+
 
   const initialValues = {
     username: '',
@@ -21,13 +40,23 @@ export default function RegistrationPage() {
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues,
     validationSchema: signUpSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values, action) => {
       delete values.checkbox;
       delete values.confirm_password;
-      dispatch(registerUser(values));
-      console.log(values);
+      await dispatch(registerUser(values));
+      action.resetForm();
+      onRegister();
     }
+
   })
+
+
+
+
+
+  // if (registrationStaus) {
+  //   navigate('/login');
+  // }
 
   const handleCaptcha = (token) => {
     setCaptchaCode(token);
@@ -145,8 +174,8 @@ export default function RegistrationPage() {
                             onChange={handleCaptcha}
                           />
                           <button
-                            // type={captchaCode ? "submit" : "button"}
-                            type="submit"
+                            type={captchaCode ? "submit" : "button"}
+                            // type="submit"
                             className="btn btn-fill-out btn-block hover-up font-weight-bold mt-20"
                           >
                             Submit &amp; Register

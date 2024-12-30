@@ -1,20 +1,40 @@
+import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+import { Link, useNavigate } from "react-router-dom";
+import { loginSchema } from "../schemas";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../redux/slice/UserSlice";
 
 export default function LoginPage() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const userLoginStatus = useSelector((state) => state.userSlice.isSession);
   const [captchaCode, setCaptchaCode] = useState("");
 
-  // Function to generate a 4-digit random code
-  const generateCaptcha = async () => {
-    const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
-    const newCode = randomCode.split('');
-    setCaptchaCode(newCode);
+  const handleCaptcha = (token) => {
+    setCaptchaCode(token);
   };
 
+  const user = useSelector((state) => state.userSlice.user);
 
-  useEffect(() => {
-    generateCaptcha();
-  }, []);
+  console.log(user);
+
+  const initialValues = {
+    identifier: '',
+    password: '',
+  }
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+    initialValues,
+    validationSchema: loginSchema,
+    onSubmit: async (values, action) => {
+      await dispatch(loginUser(values));
+      action.resetForm();
+    }
+  })
+
+
   return (
     <main className="main pages">
       <div className="page-header breadcrumb-wrap">
@@ -50,65 +70,51 @@ export default function LoginPage() {
                           <Link to="/register">Create here</Link>
                         </p>
                       </div>
-                      <form method="post">
+                      <form onSubmit={handleSubmit}>
                         <div className="form-group">
                           <input
                             type="text"
-                            required
-                            name="email"
+                            name="identifier"
                             placeholder="Username or Email *"
+                            value={values.identifier}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                           />
+                          {touched.identifier && errors.identifier && (
+                            <span className="font-sm text-danger">{errors.identifier}</span>
+                          )}
                         </div>
                         <div className="form-group">
                           <input
-                            required
                             type="password"
                             name="password"
                             placeholder="Your password *"
+                            value={values.password}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
                           />
+                          {touched.password && errors.password && (
+                            <span className="font-sm text-danger">{errors.password}</span>
+                          )}
                         </div>
-                        <div className="login_footer form-group">
-                          <div className="chek-form">
-                            <input
-                              type="text"
-                              required
-                              name="email"
-                              placeholder="Security code *"
-                            />
-                          </div>
-                          <span className="security-code">
-                            <b className="text-new">{captchaCode[0]}</b>
-                            <b className="text-hot">{captchaCode[1]}</b>
-                            <b className="text-sale">{captchaCode[2]}</b>
-                            <b className="text-best">{captchaCode[3]}</b>
-                          </span>
-                        </div>
-                        <div className="login_footer form-group mb-50">
-                          <div className="chek-form">
-                            <div className="custome-checkbox">
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                name="checkbox"
-                                id="exampleCheckbox1"
-                                defaultValue
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor="exampleCheckbox1"
-                              >
-                                <span>Remember me</span>
-                              </label>
-                            </div>
-                          </div>
+
+                        <div className="login_footer form-group mb-10">
                           <a className="text-muted" href="#">
                             Forgot password?
                           </a>
                         </div>
+                        {touched.checkbox && errors.checkbox && (
+                          <span className="font-sm text-danger">{errors.checkbox}</span>
+                        )}
+                        <ReCAPTCHA
+                          sitekey="6LfDM6kqAAAAANn5pEP2SbUugd8zzlnMyALO86XY"
+                          onChange={handleCaptcha}
+                        />
                         <div className="form-group">
                           <button
-                            type="submit"
-                            className="btn btn-heading btn-block hover-up"
+                            type={captchaCode ? "submit" : "button"}
+                            // type="submit"
+                            className="btn btn-heading btn-block hover-up mt-10"
                             name="login"
                           >
                             Log in

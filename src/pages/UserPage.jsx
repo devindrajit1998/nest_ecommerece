@@ -1,4 +1,8 @@
+import { useDispatch } from "react-redux";
+import { logOut } from "../redux/slice/UserSlice";
+
 export default function UserPage() {
+  const dispatch = useDispatch();
   return (
     <main className="main pages">
       <div className="page-header breadcrumb-wrap">
@@ -91,7 +95,7 @@ export default function UserPage() {
                         </a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="page-login.html">
+                        <a className="nav-link" onClick={() => dispatch(logOut())}>
                           <i className="fi-rs-sign-out mr-10" />
                           Logout
                         </a>

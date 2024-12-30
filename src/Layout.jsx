@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import QuickViewModal from "./components/QuickViewModal";
@@ -9,6 +9,7 @@ import MainLoader from "./components/MainLoader";
 import FuncLoader from "./components/FuncLoader";
 import { fetchCategory } from "./redux/slice/CommonFetchSlice";
 import { updateLocalCart } from "./redux/slice/CartSlice";
+import MiniLoader from "./components/MiniLoader";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const ShopPage = lazy(() => import("./pages/ShopPage"));
@@ -42,11 +43,14 @@ export default function Layout() {
   // searchData state
   const searchData = useSelector((state) => state.productSlice.searchData);
   // user login status
+  const userLoginStatus = useSelector((state) => state.userSlice.isSession);
+  // user loading state
+  const userLoading = useSelector((state) => state.userSlice.loading);
 
-  const userLoginStatus = useSelector((state) => state.userSlice.loginStatus);
 
   return (
     <>
+      {/* {userLoading && <MiniLoader />} */}
       {loadingState && <MainLoader />}
       {showProductModal && <QuickViewModal data={{ showProductModal }} />}
       <Header />
@@ -60,9 +64,9 @@ export default function Layout() {
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/about-us" element={<AboutPage />} />
-          <Route path="/dashboard" element={userLoginStatus ? <UserPage /> : <LoginPage />} />
-          <Route path="/login" element={userLoginStatus ? <UserPage /> : <LoginPage />} />
-          <Route path="/register" element={userLoginStatus ? <UserPage /> : <RegistrationPage />} />
+          <Route path="/dashboard" element={userLoginStatus ? <UserPage /> : <Navigate to="/login"/>} />
+          <Route path="/login" element={userLoginStatus ? <Navigate to="/dashboard"/> : <LoginPage />} />
+          <Route path="/register" element={userLoginStatus ? <Navigate to="/dashboard"/> : <RegistrationPage />} />
           <Route path="*" element={<NotFound />} />
           {searchData?.data && <Route path="/search" element={<SearchResult />} />}
         </Routes>

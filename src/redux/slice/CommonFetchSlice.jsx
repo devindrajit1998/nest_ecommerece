@@ -12,6 +12,8 @@ const initialState = {
     // baseUrl: "https://nest-api-04r6.onrender.com",
 }
 
+
+
 const BASE_URL = 'https://nest-api-ze4w.onrender.com/api'
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -120,47 +122,47 @@ export const commonFetchSlice = createSlice({
                 console.error("Error fetching banner data:", action.error);
             })
             .addCase(fetchCategory.pending, (state) => {
-                state.loading = true;
+                // state.loading = true;
             })
             .addCase(fetchCategory.fulfilled, (state, action) => {
-                state.loading = false;
+                // state.loading = false;
                 state.categoryData = action.payload;
             })
             .addCase(fetchCategory.rejected, (state, action) => {
-                state.loading = false;
+                // state.loading = false;
                 console.error("Error fetching category data:", action.error);
             })
             .addCase(fetchCategoryBySlug.pending, (state) => {
-                state.loading = true;
+                // state.loading = true;
             })
             .addCase(fetchCategoryBySlug.fulfilled, (state, action) => {
-                state.loading = false;
+                // state.loading = false;
                 state.singleCategory = action.payload;
             })
             .addCase(fetchCategoryBySlug.rejected, (state, action) => {
-                state.loading = false;
+                // state.loading = false;
                 console.error("Error fetching single category data:", action.error);
             })
             // .addCase(fetchSubcategoryByCategoryId.pending, (state) => {
             //     state.loading = true;
             // })
             .addCase(fetchSubcategoryByCategoryId.fulfilled, (state, action) => {
-                state.loading = false;
+                // state.loading = false;
                 state.subCategoryData = action.payload;
             })
             .addCase(fetchSubcategoryByCategoryId.rejected, (state, action) => {
-                state.loading = false;
+                // state.loading = false;
                 console.error("Error fetching subcategory data:", action.error);
             })
             .addCase(fetchProductBySubcategoryId.pending, (state) => {
-                state.loading = true;
+                // state.loading = true;
             })
             .addCase(fetchProductBySubcategoryId.fulfilled, (state, action) => {
-                state.loading = false;
+                // state.loading = false;
                 state.subCategoryProducts = action.payload;
             })
             .addCase(fetchProductBySubcategoryId.rejected, (state, action) => {
-                state.loading = false;
+                // state.loading = false;
                 console.error("Error fetching subcategory product data:", action.error);
             })
     }

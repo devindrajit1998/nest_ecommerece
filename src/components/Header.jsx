@@ -15,7 +15,7 @@ export default function Header() {
 
   // user login status
 
-  const userLoginStatus = useSelector((state) => state.userSlice.loginStatus);
+  const userLoginStatus = useSelector((state) => state.userSlice.isSession);
 
   const [formData, setFormData] = useState("");
   // console.log(formData);
