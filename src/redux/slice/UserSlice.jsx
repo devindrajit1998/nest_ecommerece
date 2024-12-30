@@ -59,6 +59,11 @@ export const userSlice = createSlice({
         logOut: (state) => {
             state.isSession = false;
             state.user = [];
+            localStorage.removeItem("isSession");
+        },
+        setSession: (state, action) => {
+            state.isSession = action.payload.session;
+            state.user = action.payload.user;
         }
     },
     extraReducers: (builder) => {
@@ -72,10 +77,12 @@ export const userSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.user = action.payload;
                 state.isSession = true;
+                localStorage.setItem("isSession", state.isSession);
+                localStorage.setItem("user", JSON.stringify(action.payload));
             })
     }
 });
 
 
 export default userSlice.reducer;
-export const { logOut } = userSlice.actions;
+export const { logOut, setSession } = userSlice.actions;

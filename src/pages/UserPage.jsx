@@ -1,8 +1,15 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../redux/slice/UserSlice";
+import { useState } from "react";
 
 export default function UserPage() {
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState("tab-1");
+  const toggleTabs = (tab) => {
+    setIsOpen(tab);
+  }
+
+  const user = useSelector((state) => state.userSlice.user.data.user)
   return (
     <main className="main pages">
       <div className="page-header breadcrumb-wrap">
@@ -26,13 +33,7 @@ export default function UserPage() {
                     <ul className="nav flex-column" role="tablist">
                       <li className="nav-item">
                         <a
-                          className="nav-link active"
-                          id="dashboard-tab"
-                          data-bs-toggle="tab"
-                          href="#dashboard"
-                          role="tab"
-                          aria-controls="dashboard"
-                          aria-selected="false"
+                          className={`nav-link ${isOpen === "tab-1" && 'active'}`} onClick={() => toggleTabs("tab-1")}
                         >
                           <i className="fi-rs-settings-sliders mr-10" />
                           Dashboard
@@ -40,13 +41,7 @@ export default function UserPage() {
                       </li>
                       <li className="nav-item">
                         <a
-                          className="nav-link"
-                          id="orders-tab"
-                          data-bs-toggle="tab"
-                          href="#orders"
-                          role="tab"
-                          aria-controls="orders"
-                          aria-selected="false"
+                          className={`nav-link ${isOpen === "tab-2" && 'active'}`} onClick={() => toggleTabs("tab-2")}
                         >
                           <i className="fi-rs-shopping-bag mr-10" />
                           Orders
@@ -54,13 +49,7 @@ export default function UserPage() {
                       </li>
                       <li className="nav-item">
                         <a
-                          className="nav-link"
-                          id="track-orders-tab"
-                          data-bs-toggle="tab"
-                          href="#track-orders"
-                          role="tab"
-                          aria-controls="track-orders"
-                          aria-selected="false"
+                          className={`nav-link ${isOpen === "tab-3" && 'active'}`} onClick={() => toggleTabs("tab-3")}
                         >
                           <i className="fi-rs-shopping-cart-check mr-10" />
                           Track Your Order
@@ -68,13 +57,7 @@ export default function UserPage() {
                       </li>
                       <li className="nav-item">
                         <a
-                          className="nav-link"
-                          id="address-tab"
-                          data-bs-toggle="tab"
-                          href="#address"
-                          role="tab"
-                          aria-controls="address"
-                          aria-selected="true"
+                          className={`nav-link ${isOpen === "tab-4" && 'active'}`} onClick={() => toggleTabs("tab-4")}
                         >
                           <i className="fi-rs-marker mr-10" />
                           My Address
@@ -82,13 +65,7 @@ export default function UserPage() {
                       </li>
                       <li className="nav-item">
                         <a
-                          className="nav-link"
-                          id="account-detail-tab"
-                          data-bs-toggle="tab"
-                          href="#account-detail"
-                          role="tab"
-                          aria-controls="account-detail"
-                          aria-selected="true"
+                          className={`nav-link ${isOpen === "tab-5" && 'active'}`} onClick={() => toggleTabs("tab-5")}
                         >
                           <i className="fi-rs-user mr-10" />
                           Account details
@@ -105,36 +82,49 @@ export default function UserPage() {
                 </div>
                 <div className="col-md-9">
                   <div className="tab-content account dashboard-content pl-50">
-                    <div
-                      className="tab-pane fade active show"
-                      id="dashboard"
-                      role="tabpanel"
-                      aria-labelledby="dashboard-tab"
-                    >
-                      <div className="card">
-                        <div className="card-header">
-                          <h3 className="mb-0">Hello Rosie!</h3>
-                        </div>
-                        <div className="card-body">
+                    {isOpen === "tab-1" && <div
+                      className="tab-pane fade active show">
+                      <div className="card dashboard-card">
+                        <div className="card-body text-center">
+                          <img width="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ3AH9WTlcacKErfpKhk-lJ7serN0eQje6Qg&s" alt="Avatar" className="avatar" />
+                          <h5 className="mt-3">Hey {user?.firstname !== null ? user.firstname : 'User'}!</h5>
+                          <p className="text-muted mb-4">User Information</p>
+                          <div className="row justify-content-center">
+                            <div className="col-md-12">
+                              <table className="table table-borderless user-info">
+                                <tbody>
+                                  <tr>
+                                    <td><strong>First Name:</strong></td>
+                                    <td>{user?.firstname !== null ? user.firstname : 'Need to update'}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><strong>Last Name:</strong></td>
+                                    <td>{user?.lastname !== null ? user.lastname : 'Need to update'}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><strong>Email:</strong></td>
+                                    <td>{user?.email}</td>
+                                  </tr>
+                                  <tr>
+                                    <td><strong>Phone:</strong></td>
+                                    <td>{user?.mobile !== null ? user.mobile : 'Need to update'}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
                           <p>
-                            From your account dashboard. you can easily check
-                            &amp; view your <a href="#">recent orders</a>,<br />
-                            manage your{" "}
-                            <a href="#">
-                              shipping and billing addresses
-                            </a> and{" "}
-                            <a href="#">
-                              edit your password and account details.
-                            </a>
+                            From your account dashboard, you can easily check &amp; view your
+                            <a href="#" className="link-custom">recent orders</a>,<br />
+                            manage your <a href="#" className="link-custom">shipping and billing addresses</a> and
+                            <a href="#" className="link-custom">edit your password and account details</a>.
                           </p>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      className="tab-pane fade"
-                      id="orders"
-                      role="tabpanel"
-                      aria-labelledby="orders-tab"
+
+                    </div>}
+                    {isOpen === "tab-2" && <div
+                      className="tab-pane fade active show"
                     >
                       <div className="card">
                         <div className="card-header">
@@ -191,12 +181,10 @@ export default function UserPage() {
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      className="tab-pane fade"
-                      id="track-orders"
-                      role="tabpanel"
-                      aria-labelledby="track-orders-tab"
+                    </div>}
+
+                    {isOpen === "tab-3" && <div
+                      className="tab-pane fade active show"
                     >
                       <div className="card">
                         <div className="card-header">
@@ -243,12 +231,11 @@ export default function UserPage() {
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      className="tab-pane fade"
-                      id="address"
-                      role="tabpanel"
-                      aria-labelledby="address-tab"
+                    </div>}
+
+                    {isOpen === "tab-4" && <div
+                      className="tab-pane fade active show"
+
                     >
                       <div className="row">
                         <div className="col-lg-6">
@@ -293,12 +280,11 @@ export default function UserPage() {
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      className="tab-pane fade"
-                      id="account-detail"
-                      role="tabpanel"
-                      aria-labelledby="account-detail-tab"
+                    </div>}
+
+                    {isOpen === "tab-5" && <div
+                      className="tab-pane fade active show"
+
                     >
                       <div className="card">
                         <div className="card-header">
@@ -406,7 +392,8 @@ export default function UserPage() {
                           </form>
                         </div>
                       </div>
-                    </div>
+                    </div>}
+
                   </div>
                 </div>
               </div>

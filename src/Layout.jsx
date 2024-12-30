@@ -10,6 +10,7 @@ import FuncLoader from "./components/FuncLoader";
 import { fetchCategory } from "./redux/slice/CommonFetchSlice";
 import { updateLocalCart } from "./redux/slice/CartSlice";
 import MiniLoader from "./components/MiniLoader";
+import { setSession } from "./redux/slice/UserSlice";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const ShopPage = lazy(() => import("./pages/ShopPage"));
@@ -30,9 +31,16 @@ export default function Layout() {
   // fetch cart data from localstorage
   const localCart = JSON.parse(localStorage.getItem("cartData")) || [];
 
+  // check user & session
+  const loggedUser = JSON.parse(localStorage.getItem("user")) || [];
+  const isLoggedIn = JSON.parse(localStorage.getItem("isSession")) || false;
+  const userData = { session: isLoggedIn, user: loggedUser }
+  // console.log(userData)
+
   useEffect(() => {
     dispatch(fetchCategory());
     dispatch(updateLocalCart(localCart));
+    dispatch(setSession(userData));
   }, []);
   // Loader state
   const loadingState = useSelector((state) => state.commonFetchSlice.loading);
@@ -64,9 +72,9 @@ export default function Layout() {
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/about-us" element={<AboutPage />} />
-          <Route path="/dashboard" element={userLoginStatus ? <UserPage /> : <Navigate to="/login"/>} />
-          <Route path="/login" element={userLoginStatus ? <Navigate to="/dashboard"/> : <LoginPage />} />
-          <Route path="/register" element={userLoginStatus ? <Navigate to="/dashboard"/> : <RegistrationPage />} />
+          <Route path="/dashboard" element={userLoginStatus ? <UserPage /> : <Navigate to="/login" />} />
+          <Route path="/login" element={userLoginStatus ? <Navigate to="/dashboard" /> : <LoginPage />} />
+          <Route path="/register" element={userLoginStatus ? <Navigate to="/dashboard" /> : <RegistrationPage />} />
           <Route path="*" element={<NotFound />} />
           {searchData?.data && <Route path="/search" element={<SearchResult />} />}
         </Routes>
