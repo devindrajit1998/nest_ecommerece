@@ -72,7 +72,7 @@ export default function Layout() {
 
   useEffect(() => {
     if (isLoggedIn === true) {
-      dispatch(fetchUserById(32));
+      dispatch(fetchUserById(loggedUser.id));
     }
     if (isLoggedIn && isCartUpdated) {
       dispatch(updateLocalCart(newCart));
