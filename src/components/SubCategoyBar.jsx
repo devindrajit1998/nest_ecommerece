@@ -16,7 +16,8 @@ export default function SubCategoyBar(props) {
                 {subData?.map((items) => {
                     return (
                         <li key={items.id}>
-                            <a onClick={() => dispatch(fetchProductBySubcategoryId(items.documentId))}>{items.name}</a><span className="count">15</span>
+                            <a onClick={() => dispatch(fetchProductBySubcategoryId(items.documentId))}>{items.name}</a>
+                            {/* <span className="count">15</span> */}
                         </li>
                     )
                 })}

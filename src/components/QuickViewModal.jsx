@@ -44,7 +44,7 @@ export default function QuickViewModal(props) {
                       {productData.title}
                     </Link>
                   </h3>
-                  <div className="product-detail-rating">
+                  {/* <div className="product-detail-rating">
                     <div className="product-rate-cover text-end">
                       <div className="product-rate d-inline-block">
                         <div
@@ -57,7 +57,7 @@ export default function QuickViewModal(props) {
                         (32 reviews)
                       </span>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="clearfix product-price-cover">
                     <div className="product-price primary-color float-left">
                       <span className="current-price text-brand">₹{productData.price - productData.price * productData.offer * 0.01}</span>

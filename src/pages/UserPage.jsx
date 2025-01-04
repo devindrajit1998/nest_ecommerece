@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../redux/slice/UserSlice";
 import { useState } from "react";
+import CustomFileUpload from "../components/CustomFileUpload";
+import { clearCart } from "../redux/slice/CartSlice";
 
 export default function UserPage() {
   const dispatch = useDispatch();
@@ -9,7 +11,13 @@ export default function UserPage() {
     setIsOpen(tab);
   }
 
-  const user = useSelector((state) => state.userSlice.user.data.user)
+  const handleLogout = async () => {
+    await dispatch(logOut());
+    dispatch(clearCart());
+  }
+
+  const user = useSelector((state) => state.userSlice.user);
+  console.log(user);
   return (
     <main className="main pages">
       <div className="page-header breadcrumb-wrap">
@@ -72,7 +80,7 @@ export default function UserPage() {
                         </a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" onClick={() => dispatch(logOut())}>
+                        <a className="nav-link" onClick={() => handleLogout()}>
                           <i className="fi-rs-sign-out mr-10" />
                           Logout
                         </a>
@@ -86,8 +94,8 @@ export default function UserPage() {
                       className="tab-pane fade active show">
                       <div className="card dashboard-card">
                         <div className="card-body text-center">
-                          <img width="100" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ3AH9WTlcacKErfpKhk-lJ7serN0eQje6Qg&s" alt="Avatar" className="avatar" />
-                          <h5 className="mt-3">Hey {user?.firstname !== null ? user.firstname : 'User'}!</h5>
+                          <div className="avatar_box"><img width="100" src={user?.image?.url} alt="Avatar" className="avatar" /></div>
+                          <h5 className="mt-3">Hey {user?.firstname !== null ? user?.firstname : 'User'}!</h5>
                           <p className="text-muted mb-4">User Information</p>
                           <div className="row justify-content-center">
                             <div className="col-md-12">
@@ -95,11 +103,11 @@ export default function UserPage() {
                                 <tbody>
                                   <tr>
                                     <td><strong>First Name:</strong></td>
-                                    <td>{user?.firstname !== null ? user.firstname : 'Need to update'}</td>
+                                    <td>{user?.firstname !== null ? user?.firstname : 'Need to update'}</td>
                                   </tr>
                                   <tr>
                                     <td><strong>Last Name:</strong></td>
-                                    <td>{user?.lastname !== null ? user.lastname : 'Need to update'}</td>
+                                    <td>{user?.lastname !== null ? user?.lastname : 'Need to update'}</td>
                                   </tr>
                                   <tr>
                                     <td><strong>Email:</strong></td>
@@ -107,7 +115,7 @@ export default function UserPage() {
                                   </tr>
                                   <tr>
                                     <td><strong>Phone:</strong></td>
-                                    <td>{user?.mobile !== null ? user.mobile : 'Need to update'}</td>
+                                    <td>{user?.mobile !== null ? user?.mobile : 'Need to update'}</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -401,6 +409,7 @@ export default function UserPage() {
           </div>
         </div>
       </div>
+      {/* <CustomFileUpload /> */}
     </main>
   );
 }

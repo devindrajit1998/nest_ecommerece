@@ -3,22 +3,24 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toggleMobileMenu } from "../redux/slice/FunctionalSlice";
 import { useEffect, useState } from "react";
 import { searchProductByName } from "../redux/slice/ProductSlice";
+import { fetchProductBySubcategoryId } from "../redux/slice/CommonFetchSlice";
 
 export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // mobile menu state
   const mobileMenuState = useSelector((state) => state.FunctionalSlice.mobileMenu);
-  // console.log(mobileMenuState)
   const cartQuantity = useSelector((state) => state.cartSlice.cartData);
   const wishQuantity = useSelector((state) => state.cartSlice.wishlist);
 
   // user login status
-
   const userLoginStatus = useSelector((state) => state.userSlice.isSession);
 
+  const categoryData = useSelector((state) => state.commonFetchSlice.categoryData.data);
+
+
   const [formData, setFormData] = useState("");
-  // console.log(formData);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(searchProductByName(formData));
@@ -31,9 +33,13 @@ export default function Header() {
     setFormData(e.target.value);
   }
 
-  // useEffect(() => {
-  //   navigate("/");
-  // }, []);
+  const handleNavigate = async ({ id, slug }) => {
+    console.log({ id, slug });
+    await dispatch(fetchProductBySubcategoryId(id));
+    navigate(`/shop/${slug}`);
+  }
+
+
   return (
     <header className="header-area header-style-1 header-height-2">
       <div className="header-middle header-middle-ptb-1 d-none d-lg-block">
@@ -119,145 +125,30 @@ export default function Header() {
                       <NavLink to="/about-us">About</NavLink>
                     </li>
                     <li className="position-static">
-                      <NavLink to="#">
+                      <Link to="#">
                         Shop <i className="fi-rs-angle-down" />
-                      </NavLink>
+                      </Link>
                       <ul className="mega-menu">
-                        <li className="sub-mega-menu sub-mega-menu-width-22">
-                          <a className="menu-title" href="#">
-                            Fruit &amp; Vegetables
-                          </a>
-                          <ul>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Meat &amp; Poultry
-                              </a>
+                        {categoryData?.map((item) => {
+                          return (
+                            <li className="sub-mega-menu sub-mega-menu-width-22 mb-3" key={item?.documentId}>
+                              <Link className="menu-title">
+                                {item?.name}
+                              </Link>
+                              <ul>
+                                {item?.subcategories?.map((curElem) => {
+                                  return (
+                                    <li key={curElem?.documentId}>
+                                      <Link onClick={() => handleNavigate({ id: curElem?.documentId, slug: item?.slug })}>
+                                        {curElem?.name}
+                                      </Link>
+                                    </li>
+                                  )
+                                })}
+                              </ul>
                             </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Fresh Vegetables
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Herbs &amp; Seasonings
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Cuts &amp; Sprouts
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Exotic Fruits &amp; Veggies
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Packaged Produce
-                              </a>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="sub-mega-menu sub-mega-menu-width-22">
-                          <a className="menu-title" href="#">
-                            Breakfast &amp; Dairy
-                          </a>
-                          <ul>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Milk &amp; Flavoured Milk
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Butter and Margarine
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Eggs Substitutes
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">Marmalades</a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">Sour Cream</a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">Cheese</a>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="sub-mega-menu sub-mega-menu-width-22">
-                          <a className="menu-title" href="#">
-                            Meat &amp; Seafood
-                          </a>
-                          <ul>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Breakfast Sausage
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Dinner Sausage
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">Chicken</a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Sliced Deli Meat
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Wild Caught Fillets
-                              </a>
-                            </li>
-                            <li>
-                              <a href="shop-product-right.html">
-                                Crab and Shellfish
-                              </a>
-                            </li>
-                          </ul>
-                        </li>
-                        <li className="sub-mega-menu sub-mega-menu-width-34">
-                          <div className="menu-banner-wrap">
-                            <a href="shop-product-right.html">
-                              <img
-                                src="/imgs/banner/banner-menu.png"
-                                alt="Nest"
-                              />
-                            </a>
-                            <div className="menu-banner-content">
-                              <h4>Hot deals</h4>
-                              <h3>
-                                Don't miss
-                                <br />
-                                Trending
-                              </h3>
-                              <div className="menu-banner-price">
-                                <span className="new-price text-success">
-                                  Save to 50%
-                                </span>
-                              </div>
-                              <div className="menu-banner-btn">
-                                <a href="shop-product-right.html">Shop now</a>
-                              </div>
-                            </div>
-                            <div className="menu-banner-discount">
-                              <h3>
-                                <span>25%</span>
-                                off
-                              </h3>
-                            </div>
-                          </div>
-                        </li>
+                          )
+                        })}
                       </ul>
                     </li>
                   </ul>

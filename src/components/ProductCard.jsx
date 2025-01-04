@@ -3,6 +3,7 @@ import { toggleProductModal } from "../redux/slice/FunctionalSlice";
 import { fetchProductById } from "../redux/slice/ProductSlice";
 import { addToCart, addToWishlist } from "../redux/slice/CartSlice";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function ProductCard(props) {
   const cardData = props.data;
@@ -33,12 +34,12 @@ export default function ProductCard(props) {
             <a href="shop-product-right.html">
               <img
                 className="default-img"
-                src={cardData?.image[0]?.url}
+                src={cardData?.image?.[0]?.url}
                 alt=''
               />
               <img
                 className="hover-img"
-                src={cardData?.image[1]?.url}
+                src={cardData?.image?.[1]?.url}
                 alt=''
               />
             </a>
@@ -69,16 +70,16 @@ export default function ProductCard(props) {
             <a href="shop-grid-right.html">Snack</a>
           </div>
           <h2>
-            <a href="shop-product-right.html">
+            <Link to={`/product/${cardData?.documentId}`} className="clamp-one-line">
               {cardData?.title}
-            </a>
+            </Link>
           </h2>
-          <div className="product-rate-cover">
+          {/* <div className="product-rate-cover">
             <div className="product-rate d-inline-block">
               <div className="product-rating" style={{ width: "90%" }} />
             </div>
             <span className="font-small ml-5 text-muted"> (4.0)</span>
-          </div>
+          </div> */}
           <div>
             <span className="font-small text-muted">
               By <a href="vendor-details-1.html">NestFood</a>

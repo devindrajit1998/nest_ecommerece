@@ -71,9 +71,8 @@ export default function CartPage() {
                     {allCart?.map((items) => {
                       return (
                         <tr className="pt-30" key={items?.id}>
-
                           <td className="image product-thumbnail pl-30 pt-40">
-                            <img src={items?.image[0].url} alt="" />
+                            <img src={items?.image?.[0].url} alt="" />
                           </td>
                           <td className="product-des product-name">
                             <h6 className="mb-5">

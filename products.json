@@ -1,0 +1,28 @@
+[
+    {
+      "author": "Ella",
+      "rating": "4",
+      "comment": "Perfect for a Sunday roast. Fresh and flavorful!",
+      "timestamp": [
+        "Wed",
+        "Dec",
+        "18",
+        "2024",
+        "12:15:00"
+      ],
+      "profile_image": "https://example.com/images/profile3.jpg"
+    },
+    {
+      "author": "Mason",
+      "rating": "3",
+      "comment": "Good quality, but the packaging could be better.",
+      "timestamp": [
+        "Fri",
+        "Nov",
+        "29",
+        "2024",
+        "09:40:00"
+      ],
+      "profile_image": "https://example.com/images/profile4.jpg"
+    }
+]

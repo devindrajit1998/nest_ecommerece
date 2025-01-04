@@ -3,9 +3,10 @@ import DOMPurify from "dompurify";
 import he from "he";
 import ProductThumb from "../components/ProductThumb";
 import RelatedProductSlider from "../components/RelatedProductSlider";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../redux/slice/ProductSlice";
+import { addProductReview, fetchProductById } from "../redux/slice/ProductSlice";
+import { useFormik } from "formik";
 
 export default function ProductDetails() {
   const location = useLocation();
@@ -22,7 +23,7 @@ export default function ProductDetails() {
     setTab(tabId);
   };
   // calculate avg review
-  const avgReview = productData?.review.reduce((acc, items) => {
+  const avgReview = productData?.review?.reduce((acc, items) => {
     return acc + Number(items.rating) / productData?.review?.length;;
   }, 0);
 
@@ -35,7 +36,31 @@ export default function ProductDetails() {
   const threeStar = Number((100 / allRating?.length * allRating?.filter((item) => item == 3).length).toFixed(2));
   const twoStar = Number((100 / allRating?.length * allRating?.filter((item) => item == 2).length).toFixed(2));
   const oneStar = Number((100 / allRating?.length * allRating?.filter((item) => item == 1).length).toFixed(2));
-  console.log({ fiveStar, fourStar, threeStar, twoStar, oneStar });
+
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+  // console.log(currentUser);
+  const time = Date();
+  const cleanedDateString = time.replace(/ GMT.*$/, "").split(" ");
+
+  const initialValues = {
+    author: currentUser?.firstname,
+    rating: "1",
+    comment: "",
+    timestamp: cleanedDateString,
+    profile_image: currentUser?.image?.url,
+  }
+
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+    initialValues,
+    // validationSchema: loginSchema,
+    onSubmit: async (values, action) => {
+      const data = { id: productData.documentId, formData: values };
+      console.log(values);
+      await dispatch(addProductReview(data));
+      action.resetForm();
+      dispatch(fetchProductById(productData.documentId));
+    }
+  })
 
 
   return (
@@ -85,7 +110,7 @@ export default function ProductDetails() {
                           </div>
                         </div>
                         <span className="font-small ml-5 text-muted">
-                          ({productData?.review.length} reviews)
+                          ({productData?.review?.length} reviews)
                         </span>
                       </div>
                     </div>
@@ -165,37 +190,20 @@ export default function ProductDetails() {
                     <div className="font-xs">
                       <ul className="mr-50 float-start">
                         <li className="mb-5">
-                          Type: <span className="text-brand">Organic</span>
-                        </li>
-                        <li className="mb-5">
-                          MFG:<span className="text-brand"> Jun 4.2021</span>
+                          MFG:<span className="text-brand"> {productData?.mfg}</span>
                         </li>
                         <li>
-                          LIFE: <span className="text-brand">70 days</span>
+                          LIFE: <span className="text-brand">{productData?.life}</span>
                         </li>
                       </ul>
                       <ul className="float-start">
                         <li className="mb-5">
-                          SKU: <a href="#">FWM15VKT</a>
-                        </li>
-                        <li className="mb-5">
-                          Tags:{" "}
-                          <a href="#" rel="tag">
-                            Snack
-                          </a>
-                          ,{" "}
-                          <a href="#" rel="tag">
-                            Organic
-                          </a>
-                          ,{" "}
-                          <a href="#" rel="tag">
-                            Brown
-                          </a>
+                          SKU: <a href="#" className="text-uppercase">{productData?.documentId}</a>
                         </li>
                         <li>
                           Stock:
                           <span className="in-stock text-brand ml-5">
-                            8 Items In Stock
+                            {productData?.stock} Items In Stock
                           </span>
                         </li>
                       </ul>
@@ -232,7 +240,7 @@ export default function ProductDetails() {
                       <a
                         className={`nav-link ${tab === 'tab-4' && 'active'}`} onClick={() => handleTabChange("tab-4")}
                       >
-                        Reviews ({productData?.review.length})
+                        Reviews ({productData?.review?.length})
                       </a>
                     </li>
                   </ul>
@@ -384,7 +392,7 @@ export default function ProductDetails() {
                                   ))}
                                 </div>
                               </div>
-                              <h6>{avgReview.toFixed(0)} out of 5</h6>
+                              <h6>{avgReview?.toFixed(0)} out of 5</h6>
                             </div>
                             <div className="progress">
                               <span>5 star</span>
@@ -461,72 +469,71 @@ export default function ProductDetails() {
                       <div className="comment-form">
                         <h4 className="mb-15">Add a review</h4>
                         <div className="product-rate d-inline-block mb-30" />
-                        <div className="row">
+                        {currentUser ? <>  <div className="row">
                           <div className="col-lg-8 col-md-12">
-                            <form
-                              className="form-contact comment_form"
-                              action="#"
-                              id="commentForm"
-                            >
+                            <form onSubmit={handleSubmit} className="form-contact comment_form">
                               <div className="row">
                                 <div className="col-12">
+                                  {/* Author Information Section */}
+                                  <div className="form-group author-info">
+                                    <div className="d-flex align-items-center">
+                                      <img
+                                        src={currentUser?.image?.url} alt="Author"
+                                        className="author-image"
+                                        style={{ width: "50px", height: "50px", borderRadius: "50%", marginRight: "10px" }}
+                                      />
+                                      <input disabled type="text" name="author" value={currentUser.firstname} onChange={handleChange} className="border-0" />
+                                    </div>
+                                  </div>
+
+                                  {/* Rating Section */}
+                                  <div className="form-group">
+                                    <div className="rating">
+                                      {[5, 4, 3, 2, 1].map((value) => (
+                                        <React.Fragment key={value}>
+                                          <input
+                                            type="radio"
+                                            id={`star${value}`}
+                                            name="rating"
+                                            value={value}
+                                            checked={values.rate === value}
+                                            onChange={handleChange}
+                                          />
+                                          <label htmlFor={`star${value}`} title={`${value} stars`} />
+                                        </React.Fragment>
+                                      ))}
+                                    </div>
+                                    {touched.rate && errors.rate && <div className="error">{errors.rate}</div>}
+                                  </div>
+
+                                  {/* Comment Section */}
                                   <div className="form-group">
                                     <textarea
                                       className="form-control w-100"
                                       name="comment"
-                                      id="comment"
                                       cols={30}
                                       rows={9}
                                       placeholder="Write Comment"
-                                      defaultValue={""}
+                                      value={values.comment}
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
                                     />
-                                  </div>
-                                </div>
-                                <div className="col-sm-6">
-                                  <div className="form-group">
-                                    <input
-                                      className="form-control"
-                                      name="name"
-                                      id="name"
-                                      type="text"
-                                      placeholder="Name"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-sm-6">
-                                  <div className="form-group">
-                                    <input
-                                      className="form-control"
-                                      name="email"
-                                      id="email"
-                                      type="email"
-                                      placeholder="Email"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col-12">
-                                  <div className="form-group">
-                                    <input
-                                      className="form-control"
-                                      name="website"
-                                      id="website"
-                                      type="text"
-                                      placeholder="Website"
-                                    />
+                                    {touched.comment && errors.comment && <div className="error">{errors.comment}</div>}
                                   </div>
                                 </div>
                               </div>
+
+
+                              {/* Submit Button */}
                               <div className="form-group">
-                                <button
-                                  type="submit"
-                                  className="button button-contactForm"
-                                >
+                                <button type="submit" className="button button-contactForm">
                                   Submit Review
                                 </button>
                               </div>
                             </form>
                           </div>
-                        </div>
+                        </div></> : <><h6>After login you can write a review <Link to="/login">(Login here)</Link></h6></>}
+
                       </div>
                     </div></> : ""}
                   </div>

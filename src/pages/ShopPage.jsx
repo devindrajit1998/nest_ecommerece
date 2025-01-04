@@ -36,7 +36,7 @@ export default function ShopPage() {
             <div className="shop-product-fillter">
               <div className="totall-product">
                 <p>
-                  We found <strong className="text-brand">29</strong> items for
+                  We found <strong className="text-brand">{productsData?.length}</strong> items for
                   you!
                 </p>
               </div>

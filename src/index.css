@@ -345,3 +345,152 @@
     transform: rotate(330deg) translate(0, -130%);
     animation-delay: -0.1s;
 }
+
+.avatar_box {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 500px;
+    height: 100px;
+    width: 100px;
+}
+
+.avatar_box::after {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    color: #ffffff88;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    transition: opacity 0.5s;
+    opacity: 0;
+    visibility: hidden;
+    cursor: pointer;
+}
+
+.avatar_box:hover::after {
+    opacity: 0.5;
+    visibility: visible;
+}
+
+.avatar_box::before {
+    content: "\f030";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    z-index: 1;
+    color: #3BB77E;
+    transition: opacity 0.5s;
+    opacity: 0;
+    visibility: hidden;
+    cursor: pointer;
+}
+
+
+.avatar_box:hover::before {
+    opacity: 0.5;
+    visibility: visible;
+}
+
+/* From Uiverse.io by Yaya12085 */
+.custum-file-upload {
+    height: 200px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    gap: 20px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #cacaca;
+    background-color: rgba(255, 255, 255, 1);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0px 48px 35px -48px rgba(0, 0, 0, 0.1);
+}
+
+.custum-file-upload .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custum-file-upload .icon svg {
+    height: 80px;
+    fill: rgba(75, 85, 99, 1);
+}
+
+.custum-file-upload .text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custum-file-upload .text span {
+    font-weight: 400;
+    color: rgba(75, 85, 99, 1);
+}
+
+.custum-file-upload input {
+    display: none;
+}
+
+.cus_upload {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0000004f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clamp-one-line {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* From Uiverse.io by andrew-demchenk0 */
+/* From Uiverse.io by PriyanshuGupta28 */ 
+.rating {
+    display: inline-block;
+  }
+  
+  .rating input {
+    display: none;
+  }
+  
+  .rating label {
+    float: right;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.3s;
+  }
+  
+  .rating label:before {
+    content: '\2605';
+    font-size: 30px;
+  }
+  
+  .rating input:checked ~ label,
+  .rating label:hover,
+  .rating label:hover ~ label {
+    color: #6f00ff;
+    transition: color 0.3s;
+  }
+  

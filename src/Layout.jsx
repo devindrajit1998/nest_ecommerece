@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -10,7 +10,7 @@ import FuncLoader from "./components/FuncLoader";
 import { fetchCategory } from "./redux/slice/CommonFetchSlice";
 import { updateLocalCart } from "./redux/slice/CartSlice";
 import MiniLoader from "./components/MiniLoader";
-import { setSession } from "./redux/slice/UserSlice";
+import { fetchUserById, loginUser, setSession, updateUserCart } from "./redux/slice/UserSlice";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const ShopPage = lazy(() => import("./pages/ShopPage"));
@@ -34,14 +34,53 @@ export default function Layout() {
   // check user & session
   const loggedUser = JSON.parse(localStorage.getItem("user")) || [];
   const isLoggedIn = JSON.parse(localStorage.getItem("isSession")) || false;
-  const userData = { session: isLoggedIn, user: loggedUser }
-  // console.log(userData)
+  const userData = { session: isLoggedIn, user: loggedUser };
+  const presentCart = useSelector((state) => state.cartSlice.cartData) || [];
+  const userCart = useSelector((state) => state.userSlice.user?.cartData) || [];
+  const thisUser = useSelector((state) => state.userSlice.user);
 
+  const [newCart, setNewCart] = useState([]);
   useEffect(() => {
     dispatch(fetchCategory());
     dispatch(updateLocalCart(localCart));
     dispatch(setSession(userData));
   }, []);
+
+  // calculate cart after login start
+
+
+  const updateCartValue = async () => {
+    const userId = loggedUser.id;
+
+    const uniqueArray = [
+      ...new Map([...presentCart, ...userCart].map(item => [item.id, item])).values()
+    ];
+    if (uniqueArray !== userCart) {
+      setNewCart(uniqueArray);
+      dispatch(updateUserCart({ data: { cartData: uniqueArray }, userId }));
+    }
+  }
+
+  const [isCartUpdated, setIsCartUpdated] = useState(false);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      updateCartValue();
+      setIsCartUpdated(true);
+    }
+  }, [isLoggedIn, presentCart]);
+
+  useEffect(() => {
+    if (isLoggedIn === true) {
+      dispatch(fetchUserById(32));
+    }
+    if (isLoggedIn && isCartUpdated) {
+      dispatch(updateLocalCart(newCart));
+    }
+  }, [isLoggedIn]);
+  // calculate cart after login end
+
+
   // Loader state
   const loadingState = useSelector((state) => state.commonFetchSlice.loading);
   // backdrop state

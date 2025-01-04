@@ -18,7 +18,7 @@ export default function LoginPage() {
 
   const user = useSelector((state) => state.userSlice.user);
 
-  console.log(user);
+  // console.log(user);
 
   const initialValues = {
     identifier: '',
@@ -29,6 +29,7 @@ export default function LoginPage() {
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values, action) => {
+      console.log(values);
       await dispatch(loginUser(values));
       action.resetForm();
     }
@@ -112,8 +113,8 @@ export default function LoginPage() {
                         />
                         <div className="form-group">
                           <button
-                            type={captchaCode ? "submit" : "button"}
-                            // type="submit"
+                            // type={captchaCode ? "submit" : "button"}
+                            type="submit"
                             className="btn btn-heading btn-block hover-up mt-10"
                             name="login"
                           >

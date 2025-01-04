@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import axios from "axios";
 
 const initialState = {
     loading: false,
@@ -8,13 +9,18 @@ const initialState = {
     error: null
 }
 
+
+const BASE_URL = 'https://nest-api-ze4w.onrender.com/api'
+const API_KEY = import.meta.env.VITE_API_KEY;
+
+
+
 export const cartSlice = createSlice({
     name: "cartSlice",
     initialState,
     reducers: {
         addToCart: (state, action) => {
             const item = action.payload;
-            console.log(item.quant);
             const findDuplicate = state.cartData?.find((curElem) => curElem.documentId == item.data.documentId);
             if (findDuplicate) {
                 state.cartData = state.cartData?.map((curElem) =>

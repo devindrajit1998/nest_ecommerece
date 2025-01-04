@@ -22,7 +22,7 @@ export default function ProductThumb(props) {
           "--swiper-pagination-color": "#fff",
         }}
         spaceBetween={10}
-        loop={true}
+        // loop={true}
         navigation={true}
         thumbs={{ swiper: thumbsSwiper }}
         modules={[FreeMode, Navigation, Thumbs]}
@@ -37,7 +37,7 @@ export default function ProductThumb(props) {
       <Swiper
         onSwiper={setThumbsSwiper}
         spaceBetween={10}
-        loop={true}
+        // loop={true}
         slidesPerView={4}
         freeMode={true}
         watchSlidesProgress={true}

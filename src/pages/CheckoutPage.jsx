@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { claculateSubtotal } from "../redux/slice/CartSlice";
+import { placeOrder } from "../redux/slice/UserSlice";
+import { updateProductQuantity } from "../redux/slice/ProductSlice";
 
 export default function CheckoutPage() {
   const dispatch = useDispatch();
@@ -9,6 +11,26 @@ export default function CheckoutPage() {
   }, [])
   const allCart = useSelector((state) => state.cartSlice.cartData);
   const subTotal = useSelector((state) => state.cartSlice.subTotal);
+  // const data =[{"stock":10},{stock:15}];
+  const createOrder = async () => {
+    await dispatch(updateProductQuantity({
+      product: [
+        { documentId: "lqujw20m8n91rlv6ra6qi5va", stocks: 10 },
+        { documentId: "dl5usvfkkjben4oort1m0n4p", stocks: 15 },
+      ]
+    }))
+    await dispatch(placeOrder({
+      orderData: {
+        "order": {
+          "item": "Laptop",
+          "quantity": 1,
+          "price": 1500,
+          "status": "Processing"
+        }
+      }
+      , userId: 32
+    }));
+  }
   return (
     <main className="main">
       <div className="page-header breadcrumb-wrap">
@@ -463,10 +485,10 @@ export default function CheckoutPage() {
                 <img
                   className="mr-15"
                   src="/imgs/theme/icons/payment-paypal.svg"
-                  alt =''
+                  alt=''
                 />
               </div>
-              <a href="#" className="btn btn-fill-out btn-block mt-30">
+              <a className="btn btn-fill-out btn-block mt-30" onClick={createOrder}>
                 Place an Order
                 <i className="fi-rs-sign-out ml-15" />
               </a>

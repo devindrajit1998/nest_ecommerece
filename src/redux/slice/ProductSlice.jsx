@@ -40,6 +40,41 @@ export const searchProductByName = createAsyncThunk("searchProductByName", async
     }
 });
 
+
+// update product quantity after order or cancellation
+
+export const updateProductQuantity = createAsyncThunk("updateProductQuantity", async (orders) => {
+    try {
+        const responses = await Promise.all(orders?.product.map((items) => axios.put(`${BASE_URL}/products/${items.documentId}`, { data: { stock: items.stocks } }, {
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': `Bearer ${API_KEY}`
+            }
+        })));
+        const responseData = responses.map((response) => response.data);
+        return responseData;
+
+    } catch (error) {
+        throw error;
+    }
+})
+
+
+// Add product review by id
+export const addProductReview = createAsyncThunk("addProductReview", async ( data ) => {
+    console.log(data);
+    try {
+        const response = await axios.put(`${BASE_URL}/products/${data.id}`, { data: { review: [data.formData] } }, {
+            headers: {
+                'Authorization': `Bearer ${API_KEY}`
+            }
+        })
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+});
+
 export const productSlice = createSlice({
     name: "productSlice",
     initialState,
@@ -70,6 +105,15 @@ export const productSlice = createSlice({
         builder.addCase(searchProductByName.rejected, (state, action) => {
             state.loading = false;
             console.log(action.error);
+        })
+        builder.addCase(updateProductQuantity.fulfilled, (state) => {
+            console.log("Update successful")
+        })
+        builder.addCase(updateProductQuantity.rejected, (state, action) => {
+            console.log(action.error);
+        })
+        builder.addCase(addProductReview.fulfilled, (state) => {
+            console.log("Review added successfully")
         })
     }
 });
